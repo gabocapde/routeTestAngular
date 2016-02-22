@@ -1,0 +1,35 @@
+<html ng-app="routingTest">
+	<head>
+		<title>Gabriel Capdevila's Angular Routing Test</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" media="screen" href="styles.css" />
+		<script type="text/javascript" src="libs/angular.min.js"></script>
+		<script type="text/javascript" src="libs/angular-route.min.js"></script>
+		<script type="text/javascript" src="libs/require.min.js"></script>
+		<script type="text/javascript" src="app.js"></script>
+		
+		<script type="text/ng-template" id="Search.html">
+			<p>Search <a href="#Add">Add</a> <a href="#List">List</a></p>
+			<form>
+				First name: <input type="text" name="fname" ng-model="nameToSearch"> 
+				<a href="#List/{{nameToSearch}}" type="submit" >Search</a>
+			</form>
+			
+		</script>
+		
+		<script type="text/ng-template" id="Add.html">
+			<p><a href="#Search">Search</a> Add <a href="#List">List</a></p>
+		</script>
+		
+		<script type="text/ng-template" id="List.html">
+			<p><a href="#Search">Search</a> <a href="#Add">Add</a> <a ng-if="RouteParams.Name" href="#List">List</a><span ng-if="!RouteParams.Name">List</span></p>
+			<h2 ng-if="RouteParams.Name">Looking for {{RouteParams.Name}}</h2>
+			<div tables-grades='StudentsInfo' name-param='RouteParams.Name'>This div will be processed up by the abSimple directive</div>
+		</script>
+		
+	</head>
+	<body>
+		<h1>Classes, Students & Grades</h1>
+		<div ng-view></div>
+	</body>
+</html>

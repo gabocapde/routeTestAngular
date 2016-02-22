@@ -1,0 +1,19 @@
+<div ng-repeat="ClassName in groupArray  | orderBy:'toString()'">
+	<h2>{{ClassName}}</h2>
+	<table class="bordered">
+	<thead>
+		<tr>
+			<th>#</th>        
+			<th>Class</th>
+			<th>Student</th>
+			<th>Grade</th>
+		</tr>
+	</thead>	
+	<tr ng-repeat="Grade in tablesGrades | filter : { name: nameParam, class: ClassName } | orderBy:['class','name','grade']">
+		<td>{{$index + 1}}</td>        
+		<td>{{Grade.class}}</td>
+		<td>{{Grade.name}}</td>
+		<td>{{Grade.grade}}</td>
+	</tr>        
+	</table>
+</div>
