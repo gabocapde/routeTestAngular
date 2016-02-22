@@ -1,0 +1,67 @@
+<html ng-app="abSampleApp">
+<head>
+<title>AB SPA Basic Example</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" media="screen" href="Examples.css" />
+<script type="text/javascript" src="angular.min.js"></script>
+<script type="text/javascript" src="angular-route.min.js"></script>
+<script type="text/javascript">
+// Angular application definition
+var app = angular.module('abSampleApp', ['ngRoute']);
+
+app.config(function($routeProvider) {
+    $routeProvider.
+        when('/Page1', {
+            templateUrl: 'View1.html',
+            controller : 'abView1Ctrl'
+        })
+        .when('/Page2', {
+            templateUrl: 'View2.html',
+            controller : 'abView2Ctrl'
+        })
+        .when('/Page3', {
+            templateUrl: 'View3.html',
+            controller : 'abView3Ctrl'
+        })
+        .otherwise({
+            redirectTo: '/Page1'
+        });
+});
+
+// Controller for View1
+app.controller('abView1Ctrl', function ABView1Ctrl($scope){});
+
+// Controller for View2
+app.controller('abView2Ctrl', function ABView2Ctrl($scope){});
+
+// Controller for View3
+app.controller('abView3Ctrl', function ABView3Ctrl($scope){});
+
+
+</script>
+<script type="text/ng-template" id="View1.html">
+    <h1>View 1</h1>
+    <p>
+    First page of our SPA.
+    </p>
+    Page 1 <a href="#Page2">Page 2</a> <a href="#Page3">Page 3</a>
+</script>
+<script type="text/ng-template" id="View2.html">
+    <h1>View 2</h1>
+    <p>
+    Second page of our SPA.
+    </p>
+    <a href="#Page1">Page 1</a> Page 2 <a href="#Page3">Page 3</a>
+</script>
+<script type="text/ng-template" id="View3.html">
+    <h1>View 3</h1>
+    <p>
+    Third page of our SPA.
+    </p>
+    <a href="#Page1">Page 1</a> <a href="#Page2">Page 2</a> Page 3
+</script>
+</head>
+<body>
+<div ng-view></div>
+</body>
+</html>
