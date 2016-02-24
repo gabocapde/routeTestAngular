@@ -7,6 +7,7 @@ app.lazy.controller('numbersCtrl', function numbersCtrl($scope, $location, stude
 		$scope.StudentsInfo = studentsInfoSvc.StudentsInfo;
 		$scope.StudentsNumbersInfo = studentsNumbersInfoSvc.StudentsNumbersInfo;
 			
+		//Checks if the students has already a number added 
 		$scope.checkName = function(array, search) {
 			for(var i = 0; i < array.length; i++) {
 				if (array[i]["name"] === search) return true;
@@ -15,6 +16,7 @@ app.lazy.controller('numbersCtrl', function numbersCtrl($scope, $location, stude
 		};		
 		
 		
+		//Adds the students to the select box only one time and checks if the students already has a number added
 		$scope.checkStudentsNames = function() {
 			$scope.Students = [];
 			angular.forEach($scope.StudentsInfo, function (item) {
@@ -26,6 +28,7 @@ app.lazy.controller('numbersCtrl', function numbersCtrl($scope, $location, stude
 
 		$scope.checkStudentsNames();
 
+		//Adds a number for a student
 		$scope.addNumber = function() {
 			$scope.nameToAdd = $scope.nameToAdd.charAt(0).toUpperCase() + $scope.nameToAdd.slice(1);;
 			$scope.number = { 

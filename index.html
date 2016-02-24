@@ -1,132 +1,215 @@
+<!DOCTYPE html>
 <html ng-app="routingTest">
-	<head>
-		<title>Gabriel Capdevila's Angular Routing Test</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<link rel="stylesheet" type="text/css" media="screen" href="styles.css" />
-		<link rel="stylesheet" type="text/css" media="screen" href="bootstrap.min.css" />
-		<script type="text/javascript" src="libs/angular.min.js"></script>
-		<script type="text/javascript" src="libs/angular-route.min.js"></script>
-		<script type="text/javascript" src="libs/angular-animate.min.js"></script>
-		<script type="text/javascript" src="libs/require.min.js"></script>
-		<script type="text/javascript" src="app.js"></script>
-		
-		<script type="text/ng-template" id="Search.html">
-			<p>Search <a href="#AddGrade">Add</a> <a href="#List">List All</a> <a href="#Numbers">Numbers</a></p>
-			<div class="col-sm-offset-1 col-sm-10">
-				<h2>Search for a Student</h2>
-				<form class="form-horizontal" role="form" ng-submit="searchName()">
-					<div class="form-group">
-						<label class="control-label col-sm-2" for="nameToSearch">Name:</label>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" ng-model="nameToSearch" id="nameToSearch" placeholder="Enter name">
-						</div>
-					</div>	
-					<div class="form-group"> 
-						<div class="col-sm-offset-2 col-sm-10">
-							<button type="submit" class="btn btn-default" ng-disabled="nameToSearch.length == 0">Search</button>
-						</div>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<title>Gabriel Capdevila's Angular Test</title>
+
+	<!-- CSS -->
+	<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="css/font-awesome.min.css" rel="stylesheet" media="screen">
+	<link href="css/simple-line-icons.css" rel="stylesheet" media="screen">
+	<link href="css/animate.css" rel="stylesheet">
+	<link href="css/styles.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="css/style.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    <script type="text/javascript" src="libs/modernizr.custom.js"></script>
+	<script type="text/javascript" src="libs/angular.min.js"></script>
+	<script type="text/javascript" src="libs/angular-route.min.js"></script>
+	<script type="text/javascript" src="libs/angular-animate.min.js"></script>
+	<script type="text/javascript" src="libs/require.min.js"></script>
+	<script type="text/javascript" src="app.js"></script>
+	
+	<!-- Template for SEARCH tab -->
+	<script type="text/ng-template" id="Search.html">
+		<div class="col-sm-offset-1 col-sm-10">
+			<h2>Search for a Student</h2>
+			<form class="form-horizontal" role="form" ng-submit="searchName()">
+				<div class="form-group">
+					<label class="control-label col-sm-2" for="nameToSearch">Name:</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" ng-model="nameToSearch" id="nameToSearch" placeholder="Enter name">
 					</div>
-				</form>
-				<h2>or Search for a Class</h2>
-				<form class="form-horizontal" role="form">
-					<div class="form-group">
-						<label class="control-label col-sm-2" for="selectedClass">Select Class:</label>
-						<div class="col-sm-10">
-							<select class="form-control" id="selectedClass" ng-model="selectedClass" ng-options="option for option in Classes" ng-change="onChange()">  </select>
-						</div>
-					</div>	
-				</form>
-			</div>	
-		</script>
-		
-		<script type="text/ng-template" id="AddGrade.html">
-			<p><a href="#Search">Search</a> Add <a href="#List">List All</a> <a href="#Numbers">Numbers</a></p>
-			<div class="col-sm-offset-1 col-sm-10">
-				<h2>Add a Class</h2>
-				<form class="form-horizontal" role="form" ng-submit="addClass()">
-					<div class="form-group">
-						<label class="control-label col-sm-2" for="classToAdd">Class:</label>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" ng-model="classToAdd" id="classToAdd" placeholder="Enter new class">
-						</div>
-					</div>	
-					<div class="form-group"> 
-						<div class="col-sm-offset-2 col-sm-10">
-							<button type="submit" class="btn btn-default" ng-disabled="classToAdd.length == 0">Add</button>
-						</div>
+				</div>	
+				<div class="form-group"> 
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="submit" class="btn btn-default" ng-disabled="nameToSearch.length == 0">Search</button>
 					</div>
-				</form>
-				<h2>Add a Grade for a Student</h2>
-				<form class="form-horizontal" role="form" ng-submit="addGrade()">
-					<div class="form-group">
-						<label class="control-label col-sm-2" for="classToSelect">Select Class:</label>
-						<div class="col-sm-10">
-							<select class="form-control" id="classToSelect" ng-model="classToSelect" ng-options="option for option in Classes">  </select>
-						</div>
-					</div>	
-					<div class="form-group">
-						<label class="control-label col-sm-2" for="nameToAdd">Name:</label>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" ng-model="nameToAdd" id="nameToAdd" placeholder="Enter name">
-						</div>
-					</div>	
-					<div class="form-group">
-						<label class="control-label col-sm-2" for="gradeToAdd">Grade:</label>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" ng-model="gradeToAdd" id="gradeToAdd" placeholder="Enter grade">
-						</div>
-					</div>	
-					<div class="form-group"> 
-						<div class="col-sm-offset-2 col-sm-10">
-							<button type="submit" class="btn btn-default" ng-disabled="nameToAdd.length == 0 || gradeToAdd.length == 0 || classToSelect.length == 0">Add</button>
-						</div>
+				</div>
+			</form>
+			<div class="pfblock-line pfblock-header"></div>
+			<h2>or Search for a Class</h2>
+			<form class="form-horizontal" role="form">
+				<div class="form-group">
+					<label class="control-label col-sm-2" for="selectedClass">Select Class:</label>
+					<div class="col-sm-10">
+						<select class="form-control" id="selectedClass" ng-model="selectedClass" ng-options="option for option in Classes" ng-change="onChange()">  </select>
 					</div>
-				</form>
-				<h2 ng-show="StudentsAddedInfo.length > 0">Grades added in this session</h2>
-				<div tables-grades='StudentsAddedInfo'></div>			
-			</div>	
-		</script>
-		
-		<script type="text/ng-template" id="List.html">
-			<p><a href="#Search">Search</a> <a href="#AddGrade">Add</a> <a ng-if="RouteParams.Name || RouteParams.ClassName" href="#List">List All</a><span ng-if="!RouteParams.Name && !RouteParams.ClassName">List All</span> <a href="#Numbers">Numbers</a></p>
-			<h2 ng-if="RouteParams.Name">Looking for "{{RouteParams.Name}}"</h2>
-			<h2 ng-if="RouteParams.Class && RouteParams.Student && RouteParams.Grade">Added Grade {{RouteParams.Grade}} for {{RouteParams.Student}} in {{RouteParams.Class}}</h2>
-			<div tables-grades='StudentsInfo' name-param='RouteParams.Name' class-param='RouteParams.ClassName'></div>
-		</script>
-		
-		<script type="text/ng-template" id="Numbers.html">
-			<p><a href="#Search">Search</a> <a href="#AddGrade">Add</a> <a href="#List">List All</a> Numbers</p>
-			<div class="col-sm-offset-1 col-sm-10">
-				<h2>Add a Phone Number for a Student</h2>
-				<form class="form-horizontal" role="form" ng-submit="addNumber()">
-					<div class="form-group">
-						<label class="control-label col-sm-2" for="nameToAdd">Name:</label>
-						<div class="col-sm-10">
-							<select class="form-control" id="nameToAdd" ng-model="nameToAdd" ng-options="option for option in Students">  </select>
-						</div>
-					</div>	
-					<div class="form-group">
-						<label class="control-label col-sm-2" for="numberToAdd">Grade:</label>
-						<div class="col-sm-10">
-							<div input-validation='numberToAdd'></div>
-						</div>
-					</div>	
-					<div class="form-group"> 
-						<div class="col-sm-offset-2 col-sm-10">
-							<button type="submit" class="btn btn-default" ng-disabled="numberToAdd.length < 14 || nameToAdd.length == 0">Add</button>
-						</div>
+				</div>	
+			</form>
+		</div>	
+	</script>
+
+	<!-- Template for ADD tab -->
+	<script type="text/ng-template" id="AddGrade.html">
+		<div class="col-sm-offset-1 col-sm-10">
+			<h2>Add a Class</h2>
+			<form class="form-horizontal" role="form" ng-submit="addClass()">
+				<div class="form-group">
+					<label class="control-label col-sm-2" for="classToAdd">Class:</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" ng-model="classToAdd" id="classToAdd" placeholder="Enter new class">
 					</div>
-				</form>
-			</div>
+				</div>	
+				<div class="form-group"> 
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="submit" class="btn btn-default" ng-disabled="classToAdd.length == 0">Add</button>
+					</div>
+				</div>
+				<div ng-show="classRecentlyAdded.length != 0" class="form-group"> 
+					<div class="col-sm-offset-2 col-sm-10">
+						<span class="col-sm-12 noPaddingLeft"><i>You must add a new Grade for a Student in <b>{{classRecentlyAdded}}</b> before seeing it in the list of classes</i></span>
+					</div>
+				</div>
+			</form>
+			<div class="pfblock-line pfblock-header"></div>
+			<h2>Add a Grade for a Student</h2>
+			<form class="form-horizontal" role="form" ng-submit="addGrade()">
+				<div class="form-group">
+					<label class="control-label col-sm-2" for="classToSelect">Select Class:</label>
+					<div class="col-sm-10">
+						<select class="form-control" id="classToSelect" ng-model="classToSelect" ng-options="option for option in Classes">  </select>
+					</div>
+				</div>	
+				<div class="form-group">
+					<label class="control-label col-sm-2" for="nameToAdd">Name:</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" ng-model="nameToAdd" id="nameToAdd" placeholder="Enter name">
+					</div>
+				</div>	
+				<div class="form-group">
+					<label class="control-label col-sm-2" for="gradeToAdd">Grade:</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" ng-model="gradeToAdd" id="gradeToAdd" placeholder="Enter grade">
+					</div>
+				</div>	
+				<div class="form-group"> 
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="submit" class="btn btn-default" ng-disabled="nameToAdd.length == 0 || gradeToAdd.length == 0 || classToSelect.length == 0">Add</button>
+					</div>
+				</div>
+			</form>
+			<div ng-show="StudentsAddedInfo.length > 0" class="pfblock-line pfblock-header"></div>
+			<h2 ng-show="StudentsAddedInfo.length > 0">Grades added in this session</h2>
+			<div tables-grades='StudentsAddedInfo'></div>			
+		</div>	
+	</script>
+
+	<!-- Template for LIST tab -->
+	<script type="text/ng-template" id="List.html">
+		<h2 ng-if="RouteParams.Name">Looking for "{{RouteParams.Name}}"</h2>
+		<h2 ng-if="RouteParams.Class && RouteParams.Student && RouteParams.Grade">Added Grade {{RouteParams.Grade}} for {{RouteParams.Student}} in {{RouteParams.Class}}</h2>
+		<div tables-grades='StudentsInfo' name-param='RouteParams.Name' class-param='RouteParams.ClassName'></div>
+	</script>
+
+	<!-- Template for NUMBERS tab -->
+	<script type="text/ng-template" id="Numbers.html">
+		<div class="col-sm-offset-1 col-sm-10">
+			<h2>Add a Phone Number for a Student</h2>
+			<form class="form-horizontal" role="form" ng-submit="addNumber()">
+				<div class="form-group">
+					<label class="control-label col-sm-2" for="nameToAdd">Name:</label>
+					<div class="col-sm-10">
+						<select class="form-control" id="nameToAdd" ng-model="nameToAdd" ng-options="option for option in Students">  </select>
+					</div>
+				</div>	
+				<div class="form-group">
+					<label class="control-label col-sm-2" for="numberToAdd">Grade:</label>
+					<div class="col-sm-10">
+						<div input-validation='numberToAdd'></div>
+					</div>
+				</div>	
+				<div class="form-group"> 
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="submit" class="btn btn-default" ng-disabled="numberToAdd.length < 14 || nameToAdd.length == 0">Add</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col-sm-offset-1 col-sm-10">
+			<div class="pfblock-line pfblock-header" ng-show="StudentsNumbersInfo.length > 0"></div>
+		</div>
+		<div class="col-sm-offset-1 col-sm-10">
 			<h2 ng-show="StudentsNumbersInfo.length > 0">Numbers added in this session</h2>
 			<div tables-numbers='StudentsNumbersInfo'></div>			
-		</script>
-		
-	</head>
-	<body>
-		<h1>Classes, Students & Grades</h1>
-		<div class="page {{ pageClass }}" ng-view></div>
-	</body>
-</html>
+		</div>
+	</script>
+	
+ 	<!-- Template for ABOUT tab -->
+	<script type="text/ng-template" id="About.html">
+			<div class="row">
+				<div class="col-sm-6 col-sm-offset-3">
+					<div class="pfblock-header wow fadeInUp">
+						<h2 class="pfblock-title">Gabriel Capdevila</h2>
+						<div class="pfblock-line"></div>
+						<div class="pfblock-subtitle">
+							Angular Module Test.<br />
+							February 2016.
+						</div>
+					</div>
+				</div>
+			</div>
+	</script>
 
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/readable/bootstrap.min.css">
+      
+</head>
+<body>
+
+
+	<!-- Navigation start -->
+
+	<header class="header">
+
+		<nav class="navbar navbar-custom" role="navigation">
+
+			<div class="container" id="header-container">
+
+				<div class="navbar-header">
+					<a class="navbar-brand" >Classes, Students & Grades</a>
+				</div>
+
+				<div class="collapse navbar-collapse" id="custom-collapse">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="#Search">Search</a></li>
+						<li><a href="#AddGrade">Add</a></li>
+                        <li><a href="#List">List All</a></li>
+                        <li><a href="#Numbers">Phone Numbers</a></li>
+						<li><a href="#About">About</a></li>
+					</ul>
+				</div>
+
+			</div><!-- .container -->
+
+		</nav>
+
+	</header>
+
+	<!-- Navigation end -->
+
+    <!-- Sections start -->
+
+	<section id="services" class="pfblock pfblock-gray">
+		<div class="container">
+			<div class="page {{ pageClass }}" ng-view></div>
+
+		</div><!-- .container -->
+	</section>
+
+	<!-- Sections end -->
+    
+
+</body>
+</html>

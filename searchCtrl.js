@@ -4,6 +4,8 @@ app.lazy.controller('searchCtrl', function searchCtrl($scope, $location, student
 		$scope.nameToSearch = "";
 		$scope.selectedClass = "";
 		$scope.StudentsInfo = studentsInfoSvc.StudentsInfo;
+		
+		//Gets all classes individually
 		$scope.Classes = [];
 		angular.forEach($scope.StudentsInfo, function (item) {
 			if ($scope.Classes.indexOf(item.class) == -1) {
@@ -11,10 +13,12 @@ app.lazy.controller('searchCtrl', function searchCtrl($scope, $location, student
 			}
 		});
 		
+		//Function for searching a class when the select box is used
 		$scope.onChange = function() {
 			$location.path('/Class/' + $scope.selectedClass);
 		}
 
+		//Function for searching a students using form
 		$scope.searchName = function() {
 			$location.path('/List/' + $scope.nameToSearch);
 		}

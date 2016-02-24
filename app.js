@@ -115,11 +115,27 @@ app.config(['$routeProvider','$controllerProvider','$compileProvider','$filterPr
 				}]
 			}
 		})
+		.when('/About', {
+			templateUrl: 'About.html',
+			controller : 'aboutCtrl',
+			resolve: {
+				load: ['$q', '$rootScope', function ($q, $rootScope) {
+					var deferred = $q.defer();
+					require ([
+						'aboutCtrl',
+					], function () {
+						$rootScope.$apply(function () { deferred.resolve(); });
+					});
+					return deferred.promise;
+				}]
+			}
+		})
 		.otherwise({
 			redirectTo: '/Search'
 		});
 }]);
 
+// Service for Students Info
 app.service('studentsInfoSvc', function() {
     this.StudentsInfo = 
         [
@@ -135,15 +151,18 @@ app.service('studentsInfoSvc', function() {
 		];
 });
 
+// Service for Added Students Info
 app.service('studentsAddedInfoSvc', function() {
     this.StudentsAddedInfo = [];
 });
 
+// Service for Numbers of Students
 app.service('studentsNumbersInfoSvc', function() {
     this.StudentsNumbersInfo = [];
 });
 
 
+// Directive for Classes Tables
 app.directive('tablesGrades', function () { 
     return { 
 		scope:{
@@ -154,6 +173,7 @@ app.directive('tablesGrades', function () {
         restrict : 'A',
         replace : true,
 		link : function(scope) {
+			//Gets all classes individually
 			scope.Classes = [];
 			angular.forEach(scope.tablesGrades, function (item) {
 				if (scope.Classes.indexOf(item.class) == -1) {
@@ -161,6 +181,7 @@ app.directive('tablesGrades', function () {
 				}
 			});
 			
+			//Returns wethers it has grades for that class or not
 			scope.hasGrades = function(className, name) {
 				if (name == undefined){
 					return true;
@@ -179,6 +200,7 @@ app.directive('tablesGrades', function () {
     } 
 });
 
+// Directive for Numbers Tables
 app.directive('tablesNumbers', function () { 
     return { 
 		scope:{
@@ -191,6 +213,7 @@ app.directive('tablesNumbers', function () {
     } 
 });
 
+// Directive for Input Numbers Validation
 app.directive('inputValidation', function () { 
     return { 
 		scope:{
@@ -200,10 +223,14 @@ app.directive('inputValidation', function () {
         replace : true,
 		link : function(scope) {
 			scope.$watch('inputValidation', function(val) {
+				//Strips input from special characters and gets first 10 digits
 				scope.inputValidation = scope.inputValidation.replace(/[^\d]/g, '');
 				scope.inputValidation = scope.inputValidation.substring(0, 10);
 				scope.aux = scope.inputValidation;
+				//Formats phone numbers depending on phone number pattern
 				scope.inputValidation = '(' + scope.inputValidation.substr(0, 3) + ') ' + scope.inputValidation.substr(3, 3) + '-' + scope.inputValidation.substr(6,4)
+				
+				//Removes special characters added when there aren´t enough digits
 				if (scope.aux.length <7){
 					scope.inputValidation = scope.inputValidation.replace(/-/g, '');					
 					if (scope.aux.length <4){
