@@ -1,11 +1,15 @@
 body {
     width: 80%;
-    margin: 40px auto;
+    margin: 40px auto !important;
     font-family: 'trebuchet MS', 'Lucida sans', Arial;
     font-size: 14px;
     color: #444;
 }
 
+
+
+/* TABLES
+============================================================================= */
 table {
     *border-collapse: collapse; /* IE7 and lower */
     border-spacing: 0;
@@ -87,3 +91,46 @@ table {
     border-radius: 0 0 6px 0;
 }
 
+
+/* ANIMATIONS
+============================================================================= */
+
+/* leaving animations ----------------------------------------- */
+/* rotate and fall */
+@keyframes rotateFall {
+    0%      { transform: rotateZ(0deg); }
+    20%     { transform: rotateZ(10deg); animation-timing-function: ease-out; }
+    40%     { transform: rotateZ(17deg); }
+    60%     { transform: rotateZ(16deg); }
+    100%    { transform: translateY(100%) rotateZ(17deg); }
+}
+
+/* slide in from the bottom */
+@keyframes slideInLeft {
+    from    { transform:translateX(-100%); }
+    to      { transform: translateX(0); }
+}
+
+/* rotate in newspaper */
+@keyframes rotateInNewspaper {
+    from      { transform: translateZ(-3000px) rotateZ(360deg); opacity: 0; }
+    to      { transform: translateZ(0px) rotateZ(0deg); opacity: 1; }
+}
+
+/* entering animations --------------------------------------- */
+/* scale up */
+@keyframes scaleUp {
+    from    { opacity: 0.3; -webkit-transform: scale(0.1); }
+}
+
+/* slide in from the right */
+@keyframes slideInRight {
+    from    { transform:translateX(100%); }
+    to      { transform: translateX(0); }
+}
+
+
+.page-search           { animation: scaleUp 0.5s both ease-in; z-index: 8888; }
+.page-add           { animation: slideInLeft 0.5s both ease-in; z-index: 8888; }
+.page-list           { animation: slideInRight 0.5s both ease-in; z-index: 8888; }
+.page-numbers           { animation: rotateInNewspaper 0.5s both ease-in; z-index: 8888; }

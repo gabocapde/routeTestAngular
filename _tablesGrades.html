@@ -1,4 +1,4 @@
-<div ng-repeat="ClassName in groupArray  | orderBy:'toString()'">
+<div ng-repeat="ClassName in Classes | filter: classParam | orderBy:'toString()'">
 	<h2>{{ClassName}}</h2>
 	<table class="bordered">
 	<thead>
@@ -14,6 +14,12 @@
 		<td>{{Grade.class}}</td>
 		<td>{{Grade.name}}</td>
 		<td>{{Grade.grade}}</td>
+	</tr>        
+	<tr ng-show="!hasGrades(ClassName, nameParam)">
+		<td></td>        
+		<td>This Student has no Grades for this Class</td>        
+		<td></td>
+		<td></td>
 	</tr>        
 	</table>
 </div>

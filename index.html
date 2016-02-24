@@ -3,33 +3,130 @@
 		<title>Gabriel Capdevila's Angular Routing Test</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link rel="stylesheet" type="text/css" media="screen" href="styles.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="bootstrap.min.css" />
 		<script type="text/javascript" src="libs/angular.min.js"></script>
 		<script type="text/javascript" src="libs/angular-route.min.js"></script>
+		<script type="text/javascript" src="libs/angular-animate.min.js"></script>
 		<script type="text/javascript" src="libs/require.min.js"></script>
 		<script type="text/javascript" src="app.js"></script>
 		
 		<script type="text/ng-template" id="Search.html">
-			<p>Search <a href="#Add">Add</a> <a href="#List">List</a></p>
-			<form>
-				First name: <input type="text" name="fname" ng-model="nameToSearch"> 
-				<a href="#List/{{nameToSearch}}" type="submit" >Search</a>
-			</form>
-			
+			<p>Search <a href="#AddGrade">Add</a> <a href="#List">List All</a> <a href="#Numbers">Numbers</a></p>
+			<div class="col-sm-offset-1 col-sm-10">
+				<h2>Search for a Student</h2>
+				<form class="form-horizontal" role="form" ng-submit="searchName()">
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="nameToSearch">Name:</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" ng-model="nameToSearch" id="nameToSearch" placeholder="Enter name">
+						</div>
+					</div>	
+					<div class="form-group"> 
+						<div class="col-sm-offset-2 col-sm-10">
+							<button type="submit" class="btn btn-default" ng-disabled="nameToSearch.length == 0">Search</button>
+						</div>
+					</div>
+				</form>
+				<h2>or Search for a Class</h2>
+				<form class="form-horizontal" role="form">
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="selectedClass">Select Class:</label>
+						<div class="col-sm-10">
+							<select class="form-control" id="selectedClass" ng-model="selectedClass" ng-options="option for option in Classes" ng-change="onChange()">  </select>
+						</div>
+					</div>	
+				</form>
+			</div>	
 		</script>
 		
-		<script type="text/ng-template" id="Add.html">
-			<p><a href="#Search">Search</a> Add <a href="#List">List</a></p>
+		<script type="text/ng-template" id="AddGrade.html">
+			<p><a href="#Search">Search</a> Add <a href="#List">List All</a> <a href="#Numbers">Numbers</a></p>
+			<div class="col-sm-offset-1 col-sm-10">
+				<h2>Add a Class</h2>
+				<form class="form-horizontal" role="form" ng-submit="addClass()">
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="classToAdd">Class:</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" ng-model="classToAdd" id="classToAdd" placeholder="Enter new class">
+						</div>
+					</div>	
+					<div class="form-group"> 
+						<div class="col-sm-offset-2 col-sm-10">
+							<button type="submit" class="btn btn-default" ng-disabled="classToAdd.length == 0">Add</button>
+						</div>
+					</div>
+				</form>
+				<h2>Add a Grade for a Student</h2>
+				<form class="form-horizontal" role="form" ng-submit="addGrade()">
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="classToSelect">Select Class:</label>
+						<div class="col-sm-10">
+							<select class="form-control" id="classToSelect" ng-model="classToSelect" ng-options="option for option in Classes">  </select>
+						</div>
+					</div>	
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="nameToAdd">Name:</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" ng-model="nameToAdd" id="nameToAdd" placeholder="Enter name">
+						</div>
+					</div>	
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="gradeToAdd">Grade:</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" ng-model="gradeToAdd" id="gradeToAdd" placeholder="Enter grade">
+						</div>
+					</div>	
+					<div class="form-group"> 
+						<div class="col-sm-offset-2 col-sm-10">
+							<button type="submit" class="btn btn-default" ng-disabled="nameToAdd.length == 0 || gradeToAdd.length == 0 || classToSelect.length == 0">Add</button>
+						</div>
+					</div>
+				</form>
+				<h2 ng-show="StudentsAddedInfo.length > 0">Grades added in this session</h2>
+				<div tables-grades='StudentsAddedInfo'></div>			
+			</div>	
 		</script>
 		
 		<script type="text/ng-template" id="List.html">
-			<p><a href="#Search">Search</a> <a href="#Add">Add</a> <a ng-if="RouteParams.Name" href="#List">List</a><span ng-if="!RouteParams.Name">List</span></p>
-			<h2 ng-if="RouteParams.Name">Looking for {{RouteParams.Name}}</h2>
-			<div tables-grades='StudentsInfo' name-param='RouteParams.Name'>This div will be processed up by the abSimple directive</div>
+			<p><a href="#Search">Search</a> <a href="#AddGrade">Add</a> <a ng-if="RouteParams.Name || RouteParams.ClassName" href="#List">List All</a><span ng-if="!RouteParams.Name && !RouteParams.ClassName">List All</span> <a href="#Numbers">Numbers</a></p>
+			<h2 ng-if="RouteParams.Name">Looking for "{{RouteParams.Name}}"</h2>
+			<h2 ng-if="RouteParams.Class && RouteParams.Student && RouteParams.Grade">Added Grade {{RouteParams.Grade}} for {{RouteParams.Student}} in {{RouteParams.Class}}</h2>
+			<div tables-grades='StudentsInfo' name-param='RouteParams.Name' class-param='RouteParams.ClassName'></div>
+		</script>
+		
+		<script type="text/ng-template" id="Numbers.html">
+			<p><a href="#Search">Search</a> <a href="#AddGrade">Add</a> <a href="#List">List All</a> Numbers</p>
+			<div class="col-sm-offset-1 col-sm-10">
+				<h2>Add a Phone Number for a Student</h2>
+				<form class="form-horizontal" role="form" ng-submit="addNumber()">
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="nameToAdd">Name:</label>
+						<div class="col-sm-10">
+							<select class="form-control" id="nameToAdd" ng-model="nameToAdd" ng-options="option for option in Students">  </select>
+						</div>
+					</div>	
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="numberToAdd">Grade:</label>
+						<div class="col-sm-10">
+							<div input-validation='numberToAdd'></div>
+						</div>
+					</div>	
+					<div class="form-group"> 
+						<div class="col-sm-offset-2 col-sm-10">
+							<button type="submit" class="btn btn-default" ng-disabled="numberToAdd.length < 14 || nameToAdd.length == 0">Add</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<h2 ng-show="StudentsNumbersInfo.length > 0">Numbers added in this session</h2>
+			<div tables-numbers='StudentsNumbersInfo'></div>			
 		</script>
 		
 	</head>
 	<body>
 		<h1>Classes, Students & Grades</h1>
-		<div ng-view></div>
+		<div class="page {{ pageClass }}" ng-view></div>
 	</body>
 </html>
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/readable/bootstrap.min.css">
